@@ -67,7 +67,7 @@ spec:
         name: manifests
         path: distributions/stacks/ibm/application/profiles
     name: kubeflow-apps
-  
+
   - kustomizeConfig:
       repoRef:
         name: manifests
@@ -99,7 +99,7 @@ spec:
         name: manifests
         path: distributions/stacks/ibm/application/centraldashboard/single-user
     name: centraldashboard
-    
+
 
   # katib
   - kustomizeConfig:
@@ -183,5 +183,5 @@ spec:
     name: xgboost-job
   repos:
   - name: manifests
-    uri: https://github.com/kubeflow/manifests/archive/v1.3-branch.tar.gz
-  version: v1.3-branch
+    uri: https://github.com/IBM/manifests/archive/v1.3.tar.gz
+  version: v1.3
