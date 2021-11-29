@@ -8,4 +8,4 @@ bases:
 resources:
   - mlx-api-vs.yaml
   - mlx-ui-vs.yaml
-  - mlx-profile.yaml
+  # - mlx-profile.yaml

@@ -53,7 +53,7 @@ spec:
         - name: REACT_APP_BASE_PATH
           value: /mlx
         - name: REACT_APP_DISABLE_LOGIN
-          value: "false"
+          value: "true"
         - name: KUBEFLOW_USERID_HEADER
           value: kubeflow-userid
         - name: SESSION_SECRET
