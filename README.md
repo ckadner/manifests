@@ -55,14 +55,14 @@ This repo periodically syncs all official Kubeflow components from their respect
 | Component | Local Manifests Path | Upstream Revision |
 | - | - | - |
 | Training Operator | apps/training-operator/upstream | [v1.4.0](https://github.com/kubeflow/tf-operator/tree/v1.4.0/manifests) |
-| Notebook Controller | apps/jupyter/notebook-controller/upstream | [v1.5.0-rc.2](https://github.com/kubeflow/kubeflow/tree/v1.5.0-rc.2/components/notebook-controller/config) |
-| Tensorboard Controller | apps/tensorboard/tensorboard-controller/upstream | [v1.5.0-rc.2](https://github.com/kubeflow/kubeflow/tree/v1.5.0-rc.2/components/tensorboard-controller/config) |
-| Central Dashboard | apps/centraldashboard/upstream | [v1.5.0-rc.2](https://github.com/kubeflow/kubeflow/tree/v1.5.0-rc.2/components/centraldashboard/manifests) |
-| Profiles + KFAM | apps/profiles/upstream | [v1.5.0-rc.2](https://github.com/kubeflow/kubeflow/tree/v1.5.0-rc.2/components/profile-controller/config) |
-| PodDefaults Webhook | apps/admission-webhook/upstream | [v1.5.0-rc.2](https://github.com/kubeflow/kubeflow/tree/v1.5.0-rc.2/components/admission-webhook/manifests) |
-| Jupyter Web App | apps/jupyter/jupyter-web-app/upstream | [v1.5.0-rc.2](https://github.com/kubeflow/kubeflow/tree/v1.5.0-rc.2/components/crud-web-apps/jupyter/manifests) |
-| Tensorboards Web App | apps/tensorboard/tensorboards-web-app/upstream | [v1.5.0-rc.2](https://github.com/kubeflow/kubeflow/tree/v1.5.0-rc.2/components/crud-web-apps/tensorboards/manifests) |
-| Volumes Web App | apps/volumes-web-app/upstream | [v1.5.0-rc.2](https://github.com/kubeflow/kubeflow/tree/v1.5.0-rc.2/components/crud-web-apps/volumes/manifests) |
+| Notebook Controller | apps/jupyter/notebook-controller/upstream | [v1.5.0](https://github.com/kubeflow/kubeflow/tree/v1.5.0/components/notebook-controller/config) |
+| Tensorboard Controller | apps/tensorboard/tensorboard-controller/upstream | [v1.5.0](https://github.com/kubeflow/kubeflow/tree/v1.5.0/components/tensorboard-controller/config) |
+| Central Dashboard | apps/centraldashboard/upstream | [v1.5.0](https://github.com/kubeflow/kubeflow/tree/v1.5.0/components/centraldashboard/manifests) |
+| Profiles + KFAM | apps/profiles/upstream | [v1.5.0](https://github.com/kubeflow/kubeflow/tree/v1.5.0/components/profile-controller/config) |
+| PodDefaults Webhook | apps/admission-webhook/upstream | [v1.5.0](https://github.com/kubeflow/kubeflow/tree/v1.5.0/components/admission-webhook/manifests) |
+| Jupyter Web App | apps/jupyter/jupyter-web-app/upstream | [v1.5.0](https://github.com/kubeflow/kubeflow/tree/v1.5.0/components/crud-web-apps/jupyter/manifests) |
+| Tensorboards Web App | apps/tensorboard/tensorboards-web-app/upstream | [v1.5.0](https://github.com/kubeflow/kubeflow/tree/v1.5.0/components/crud-web-apps/tensorboards/manifests) |
+| Volumes Web App | apps/volumes-web-app/upstream | [v1.5.0](https://github.com/kubeflow/kubeflow/tree/v1.5.0/components/crud-web-apps/volumes/manifests) |
 | Katib | apps/katib/upstream | [v0.13.0](https://github.com/kubeflow/katib/tree/v0.13.0/manifests/v1beta1) |
 | KFServing | apps/kfserving/upstream | [v0.6.1](https://github.com/kubeflow/kfserving/releases/tag/v0.6.1) |
 | KServe | contrib/kserve/upstream | [v0.7.0](https://github.com/kserve/kserve/tree/v0.7.0) |
@@ -93,9 +93,12 @@ The `example` directory contains an example kustomization for the single command
 
 ### Prerequisites
 
-- `Kubernetes` (tested with version `1.19`) with a default [StorageClass](https://kubernetes.io/docs/concepts/storage/storage-classes/)
+- `Kubernetes` (up to `1.21`) with a default [StorageClass](https://kubernetes.io/docs/concepts/storage/storage-classes/)
+    - :warning: Kubeflow 1.5.0 is not compatible with version 1.22 and onwards.
+        You can track the remaining work for K8s 1.22 support in
+        [kubeflow/kubeflow#6353](https://github.com/kubeflow/kubeflow/issues/6353)
 - `kustomize` (version `3.2.0`) ([download link](https://github.com/kubernetes-sigs/kustomize/releases/tag/v3.2.0))
-    - :warning: Kubeflow 1.4.0 is not compatible with the latest versions of of kustomize 4.x. This is due to changes in the order resources are sorted and printed. Please see [kubernetes-sigs/kustomize#3794](https://github.com/kubernetes-sigs/kustomize/issues/3794) and [kubeflow/manifests#1797](https://github.com/kubeflow/manifests/issues/1797). We know this is not ideal and are working with the upstream kustomize team to add support for the latest versions of kustomize as soon as we can.
+    - :warning: Kubeflow 1.5.0 is not compatible with the latest versions of of kustomize 4.x. This is due to changes in the order resources are sorted and printed. Please see [kubernetes-sigs/kustomize#3794](https://github.com/kubernetes-sigs/kustomize/issues/3794) and [kubeflow/manifests#1797](https://github.com/kubeflow/manifests/issues/1797). We know this is not ideal and are working with the upstream kustomize team to add support for the latest versions of kustomize as soon as we can.
 - `kubectl`
 
 ---
@@ -176,7 +179,7 @@ Knative is used by the KFServing official Kubeflow component.
 Install Knative Serving:
 
 ```sh
-kustomize build common/knative/knative-serving/base | kubectl apply -f -
+kustomize build common/knative/knative-serving/overlays/gateways | kubectl apply -f -
 kustomize build common/istio-1-11/cluster-local-gateway/base | kubectl apply -f -
 ```
 
@@ -295,7 +298,7 @@ kustomize build apps/katib/upstream/installs/katib-with-kubeflow | kubectl apply
 Install the Central Dashboard official Kubeflow component:
 
 ```sh
-kustomize build apps/centraldashboard/upstream/overlays/istio | kubectl apply -f -
+kustomize build apps/centraldashboard/upstream/overlays/kserve | kubectl apply -f -
 ```
 
 #### Admission Webhook
